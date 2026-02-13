@@ -7,7 +7,7 @@ spec:
   storageClassName: local-path
   resources:
     requests:
-      storage: 2 Gi
+      storage: 2Gi
   accessModes:
     - ReadWriteOnce
 
@@ -17,10 +17,10 @@ kind: Deployment
 metadata:
   name: docker-registry
   namespace: docker-registry
-  labels: 
+  labels:
     app: docker-registry
 spec:
-  replicas: 1 
+  replicas: 1
   selector:
     matchLabels:
       app: docker-registry
@@ -28,24 +28,25 @@ spec:
     metadata:
       labels:
         app: docker-registry
-  spec:
-    containers:
-    - name: docker-registry
-      image: registry:2
-      ports:
-      - containerPort: 5000
-      env:
-      - name: REGISTRY_HTTP_ADDR
-        value: :5000
-      - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
-        value: /var/lib/registry
-      volumeMounts:
+    spec:
+      containers:
+      - name: docker-registry
+        image: registry:2
+        ports:
+        - containerPort: 5000
+        env:
+        - name: REGISTRY_HTTP_ADDR
+          value: :5000
+        - name: REGISTRY_STORAGE_FILESYSTEM_ROOTDIRECTORY
+          value: /var/lib/registry
+        volumeMounts:
+        - name: storage
+          mountPath: /var/lib/registry
+      volumes:
       - name: storage
-        mountPath: /var/lib/registry
-    volumes:
-    - name: storage
-      persistentVolumeClaim:
-        claimName: docker-registry-pvc
+        persistentVolumeClaim:
+          claimName: docker-registry-pvc
+
 
 ---
 apiVersion: v1

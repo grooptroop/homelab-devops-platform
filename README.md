@@ -144,5 +144,5 @@ Kubectl create namespace docker-registry
 Берём yaml 
 ```
 cd ~ 
-curl -L -o docker-registry ""
+curl -L -o docker-registry.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/Docker-registry/docker-registry.yaml"
 ```
