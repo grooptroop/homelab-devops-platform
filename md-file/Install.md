@@ -148,7 +148,7 @@ curl -L -o docker-registry.yaml "https://raw.githubusercontent.com/grooptroop/ho
 чтобы любой узел мог ходить к registry по IP master’а.
 ```
 sudo mkdir -p /etc/rancher/k3s
-curl -L -o registries.yaml ""
+curl -L -o registries.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/Docker-registry/registries.yaml"
 sudo mv registries.yaml /etc/rancher/k3s/
 ```
 
@@ -160,7 +160,7 @@ sudo systemctl restart k3s
 Повторяем тоже самое на агенте
 ```
 sudo mkdir -p /etc/rancher/k3s
-curl -L -o registries.yaml ""
+curl -L -o registries.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/Docker-registry/registries.yaml"
 sudo mv registries.yaml /etc/rancher/k3s/
 ```
 
@@ -169,3 +169,8 @@ sudo mv registries.yaml /etc/rancher/k3s/
 sudo systemctl restart k3s-agent || sudo systemctl restart k3s
 ```
 
+
+Ставим докер если его нет и создаём образ который пушим в наш registry
+```
+
+```
