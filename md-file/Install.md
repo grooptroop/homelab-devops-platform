@@ -307,13 +307,6 @@ kubectl get pods,svc -n drone
 http://192.168.1.202
 ```
 
-```
-# 1. Clone-образ
-docker pull drone/git:1.2.1-linux-arm64
-docker tag  drone/git:1.2.1-linux-arm64  192.168.1.70:30500/drone/git:1.2.1-linux-arm64
-docker push 192.168.1.70:30500/drone/git:1.2.1-linux-arm64
-```
-
 
 Начинаем настраивать drone-runner
 ```
@@ -358,17 +351,26 @@ git clone http://192.168.1.201:3000/FixIT/test-ci.git
 
 
 
-
 ---
-Устанавливаем образы
 
-# 2. Kaniko-плагин
-docker pull plugins/kaniko:1.11.4-linux-arm64
-docker tag  plugins/kaniko:1.11.4-linux-arm64  192.168.1.70:30500/plugins/kaniko:1.11.4-linux-arm64
-docker push 192.168.1.70:30500/plugins/kaniko:1.11.4-linux-arm64
+## Prometheus + Grafana
 
-# 3. kubectl для deploy
-docker pull bitnami/kubectl:latest
-docker tag  bitnami/kubectl:latest  192.168.1.70:30500/bitnami/kubectl:latest
-docker push 192.168.1.70:30500/bitnami/kubectl:latest
+Добавляем Helm repo для prometheus 
+```
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+helm repo update
+```
+
+Создадим repo в k3s для мониторинга
+```
+kubectl create namespace monitoring
+```
+
+Устанавливаем Статический IP через Metallb
+```
+cd ~ 
+mkdir monitoring && cd monitoring
+curl -L -o grafana-ip.yaml ``
+```
+
 
