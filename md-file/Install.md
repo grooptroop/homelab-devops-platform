@@ -416,6 +416,6 @@ kubectl create namespace logging
 ```
 cd ~ 
 mkdir logging && cd logging
-curl -L -o elastic.yaml ""
+curl -L -o elastic.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/logging/elastic.yaml"
 kubectl apply -f elastic.yaml
 ```
