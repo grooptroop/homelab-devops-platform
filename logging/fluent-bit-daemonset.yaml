@@ -65,9 +65,6 @@ spec:
           volumeMounts:
             - name: varlog
               mountPath: /var/log
-            - name: varlibcontainers
-              mountPath: /var/lib/docker/containers
-              readOnly: true
             - name: config
               mountPath: /fluent-bit/etc/
       volumes:
@@ -78,8 +75,3 @@ spec:
           configMap:
             name: fluent-bit-config
 
-volumeMounts:
-  - name: varlog
-    mountPath: /var/log
-  - name: config
-    mountPath: /fluent-bit/etc/
