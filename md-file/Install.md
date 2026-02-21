@@ -13,6 +13,10 @@
 
 6. [Устройство репозитория](#устройство-репозитория) 
 
+7. [Prometheus + Grafana](#prometheus--grafana)
+
+8. [Elasticsearch]()
+
 ---
 
 ## k3s кластер
@@ -370,7 +374,48 @@ kubectl create namespace monitoring
 ```
 cd ~ 
 mkdir monitoring && cd monitoring
-curl -L -o grafana-ip.yaml ``
+curl -L -o grafana-ip.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/monitoring/grafana-ip.yaml"
+```
+
+Устанавливаем prometheus с нашей настройкой
+```
+helm install kps prometheus-community/kube-prometheus-stack -n monitoring -f grafana-ip.yaml
+```
+
+ждём пока все pods запустятся 
+```
+kubectl get pods -n monitoring
+```
+
+Заходим по вашему адрессу или как в yaml 
+```
+http://192.168.1.203/
+```
+
+Узнаём пароль нашего admin
+```
+kubectl get secret kps-grafana -n monitoring -o jsonpath='{.data.admin-password}' | base64 -d; echo
+```
+
+Входим и берём dashboard
+
+Вкладка dashboard -> слева сверху new -> import -> второе поле строчкой - туда вставляем ID
+```
+12114
 ```
 
 
+## Elasticsearch
+
+Создаём namespaces
+```
+kubectl create namespace logging
+```
+
+Копируем и применяем elasticsearch 
+```
+cd ~ 
+mkdir logging && cd logging
+curl -L -o elastic.yaml ""
+kubectl apply -f elastic.yaml
+```
