@@ -349,9 +349,24 @@ kubectl get pods -n drone
 git clone http://192.168.1.201:3000/FixIT/test-ci.git
 ```
 
-Создаю nginx приложение + dockerfile + .drone(в моём репо папка называется demo-app)
+Создаю nginx приложение + dockerfile + .drone + yaml(в моём репо папка называется demo-app)
+
+применяем для -n nginx-demo
+```
+kubectl create rolebinding drone-nginx-admin \
+  --clusterrole=admin \
+  --serviceaccount=default:default \
+  --namespace=nginx-demo
+
+kubectl patch svc nginx-demo-svc -n nginx-demo \
+  -p '{"spec":{"loadBalancerIP":"192.168.1.204"}}'
+
+kubectl annotate svc nginx-demo-svc \
+  -n nginx-demo \
+  kubectl.kubernetes.io/last-applied-configuration-
 
 
+```
 
 
 
@@ -402,31 +417,4 @@ kubectl get secret kps-grafana -n monitoring -o jsonpath='{.data.admin-password}
 Вкладка dashboard -> слева сверху new -> import -> второе поле строчкой - туда вставляем ID
 ```
 12114
-```
-
-
-## Elasticsearch
-
-Создаём namespaces
-```
-kubectl create namespace logging
-```
-
-Копируем и применяем elasticsearch 
-```
-cd ~ 
-mkdir logging && cd logging
-curl -L -o elastic.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/logging/elastic.yaml"
-kubectl apply -f elastic.yaml
-```
-
-
-Ставим Fluent Bit для сбора всех логов у подов
-```
-cd logging
-curl -L -o fluent-bit-config.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/logging/fluent-bit-config.yaml"
-curl -L -o fluent-bit-daemonset.yaml "https://raw.githubusercontent.com/grooptroop/homelab-devops-platform/refs/heads/master/logging/fluent-bit-daemonset.yaml"
-
-kubectl apply -f fluent-bit-config.yaml
-kubectl apply -f fluent-bit-daemonset.yaml
 ```
