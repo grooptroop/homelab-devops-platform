@@ -1,0 +1,60 @@
+kind: pipeline
+type: kubernetes
+name: nginx-demo-dind
+
+clone:
+  disable: true
+
+steps:
+  - name: clone
+    image: alpine/git
+    commands:
+      - git clone "$DRONE_GIT_HTTP_URL" .
+      - git checkout "$DRONE_COMMIT"
+
+  - name: build-and-push
+    image: docker:24.0
+    volumes:
+      - name: dockersock
+        path: /var/run
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+      DOCKER_USER:
+        from_secret: docker_username
+      DOCKER_PASS:
+        from_secret: docker_password
+    commands:
+      - docker info
+      - docker login 192.168.1.70:30500 -u "$DOCKER_USER" -p "$DOCKER_PASS"
+      - docker build -t 192.168.1.70:30500/our-task/nginx-demo:latest .
+      - docker push 192.168.1.70:30500/our-task/nginx-demo:latest
+
+  - name: deploy
+    image: bitnami/kubectl:latest
+    environment:
+      KUBECONFIG:
+        from_secret: kubeconfig
+    commands:
+      - kubectl get namespace nginx-demo >/dev/null 2>&1 || kubectl create namespace nginx-demo
+      - kubectl apply -f k3s-nginx.yaml --overwrite=false
+
+services:
+  - name: docker
+    image: docker:24.0-dind
+    privileged: true
+    environment:
+      DOCKER_TLS_CERTDIR: ""
+      DOCKER_OPTS: "--insecure-registry=192.168.1.70:30500 --tls=false"
+    volumes:
+      - name: dockersock
+        path: /var/run
+    command:
+      - sh
+      - -c
+      - dockerd-entrypoint.sh $DOCKER_OPTS
+
+volumes:
+  - name: dockersock
+    temp: {}
+
+

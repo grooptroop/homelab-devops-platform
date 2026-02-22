@@ -1,0 +1,1 @@
+Test work drone + gitea + registry in k3s   
