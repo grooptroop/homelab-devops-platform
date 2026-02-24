@@ -15,8 +15,6 @@
 
 7. [Prometheus + Grafana](#prometheus--grafana)
 
-8. [Elasticsearch]()
-
 ---
 
 ## k3s кластер
@@ -418,3 +416,4 @@ kubectl get secret kps-grafana -n monitoring -o jsonpath='{.data.admin-password}
 ```
 12114
 ```
+
